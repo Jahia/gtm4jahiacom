@@ -107,7 +107,7 @@ public class Gtm4JahiaFilter extends AbstractFilter {
             headScriptBuilder.append("\nwindow.gtm4 = window.gtm4 || {};gtm4.pageInfo = {event: 'info',page_category_1: '"+pageCategories.get(0)+"',page_category_2: '"+pageCategories.get(1)+"'}");
 
         headScriptBuilder.append( "\n</script>");
-        headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/gtm4JahiaCom.js\"></script>\n<" );
+        headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/gtm4Jahia.js\"></script>\n<" );
         return headScriptBuilder.toString();
     }
 
@@ -142,11 +142,11 @@ public class Gtm4JahiaFilter extends AbstractFilter {
         if (cookieNextPreviewList.isEmpty()){
             if(isJahians(renderContext)){
                 renderContext.getResponse().addCookie(
-                        buildCookie(GTM4JAHIA_USER_COOKIE_JAHIANS_VALUE,getCookiePath(httpServletRequest))
+                    buildCookie(GTM4JAHIA_USER_COOKIE_JAHIANS_VALUE,getCookiePath(httpServletRequest))
                 );
             }else{
                 renderContext.getResponse().addCookie(
-                        buildCookie(GTM4JAHIA_USER_COOKIE_VISITOR_VALUE,getCookiePath(httpServletRequest))
+                    buildCookie(GTM4JAHIA_USER_COOKIE_VISITOR_VALUE,getCookiePath(httpServletRequest))
                 );
             }
         }else{
@@ -154,7 +154,7 @@ public class Gtm4JahiaFilter extends AbstractFilter {
             Cookie cookie = cookieNextPreviewList.get(0);
             if(cookie.getValue().equals(GTM4JAHIA_USER_COOKIE_VISITOR_VALUE) && isJahians(renderContext))
                 renderContext.getResponse().addCookie(
-                        buildCookie(GTM4JAHIA_USER_COOKIE_JAHIANS_VALUE,getCookiePath(httpServletRequest))
+                    buildCookie(GTM4JAHIA_USER_COOKIE_JAHIANS_VALUE,getCookiePath(httpServletRequest))
                 );
         }
     }
