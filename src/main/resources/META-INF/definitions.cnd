@@ -1,9 +1,2 @@
 <jnt = 'http://www.jahia.org/jahia/nt/1.0'>
 <jmix = 'http://www.jahia.org/jahia/mix/1.0'>
-<gtm4mix = 'http://www.jahia.org/se/modules/gtm4/mix/1.0'>
-<gtm4 = 'http://www.jahia.org/se/modules/gtm4/1.0'>
-
-[gtm4mix:pageGtmUUID] mixin
- extends = jnt:page
- itemtype = metadata
- - gtm4:pageGtmUUID (string) nofulltext

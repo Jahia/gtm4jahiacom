@@ -40,7 +40,7 @@ public class Gtm4JahiaFilter extends AbstractFilter {
     @Activate
     public void activate() {
         setPriority(-1);
-        setApplyOnModes("live,preview");//,preview
+        setApplyOnModes("live");//,preview
         setApplyOnConfigurations("page");
         setApplyOnTemplateTypes("html");
         setSkipOnConfigurations("include,wrapper");//?
@@ -103,9 +103,11 @@ public class Gtm4JahiaFilter extends AbstractFilter {
         StringBuilder headScriptBuilder =
                 new StringBuilder("\n<script type=\"application/javascript\">");
 
-        if(!pageCategories.isEmpty())
-            headScriptBuilder.append("\nwindow.gtm4 = window.gtm4 || {};gtm4.pageInfo = {event: 'info',page_category_1: '"+pageCategories.get(0)+"',page_category_2: '"+pageCategories.get(1)+"'}");
-
+        if(!pageCategories.isEmpty()) {
+            headScriptBuilder.append("\nwindow.gtm4 = window.gtm4 || {};gtm4.pageInfo = ");
+            headScriptBuilder.append("{event: 'info',page_category_1: '" + pageCategories.get(0) + "',page_category_2: '" + pageCategories.get(1)+ "',");
+            headScriptBuilder.append("page_identifier: '" + pageCategories.get(2) + "',page_path: '" + pageCategories.get(3) + "'}");
+        }
         headScriptBuilder.append( "\n</script>");
         headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/gtm4Jahia.js\"></script>\n<" );
         return headScriptBuilder.toString();
@@ -129,6 +131,8 @@ public class Gtm4JahiaFilter extends AbstractFilter {
                     : "n/a"
             );
             pageCategories.add(pageNode.getProperty(PAGE_CATEGORY_2_PROPS).getValue().toString());
+            pageCategories.add(pageNode.getIdentifier());
+            pageCategories.add(pageNode.getPath());
         }
         return pageCategories;
     }
