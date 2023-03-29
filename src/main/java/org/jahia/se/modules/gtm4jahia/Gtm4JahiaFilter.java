@@ -101,14 +101,23 @@ public class Gtm4JahiaFilter extends AbstractFilter {
     private String getHeadScript(RenderContext renderContext) throws RepositoryException {
         List<String> pageCategories = getPageCategories(renderContext);
         StringBuilder headScriptBuilder =
-                new StringBuilder("\n<script type=\"application/javascript\">");
+                new StringBuilder("\n<script type=\"application/javascript\">window.gtm4 = window.gtm4 || {};");
 
         if(!pageCategories.isEmpty()) {
-            headScriptBuilder.append("\nwindow.gtm4 = window.gtm4 || {};gtm4.pageInfo = ");
+            headScriptBuilder.append("\ngtm4.pageInfo = ");
             headScriptBuilder.append("{event: 'info',page_category_1: '" + pageCategories.get(0) + "',page_category_2: '" + pageCategories.get(1)+ "',");
-            headScriptBuilder.append("page_identifier: '" + pageCategories.get(2) + "',page_path: '" + pageCategories.get(3) + "'}");
+            headScriptBuilder.append("page_identifier: '" + pageCategories.get(2) + "',page_path: '" + pageCategories.get(3) + "',");
+
+            String isVisitorLogged = (isGuest(renderContext) || isJahians(renderContext)) ? "0" : "1";
+            headScriptBuilder.append("visitor_logged: '" + isVisitorLogged + "'}");
         }
+
+//        if(!(isGuest(renderContext) || isJahians(renderContext))){
+//            headScriptBuilder.append("\ngtm4.userLogged = true;");
+//        }
+
         headScriptBuilder.append( "\n</script>");
+
         headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/gtm4Jahia.js\"></script>\n<" );
         return headScriptBuilder.toString();
     }
@@ -139,9 +148,15 @@ public class Gtm4JahiaFilter extends AbstractFilter {
 
     private void manageCookie(RenderContext renderContext){
         HttpServletRequest httpServletRequest = renderContext.getRequest();
-        List<Cookie> cookieNextPreviewList = Arrays.stream(httpServletRequest.getCookies()) // convert list to stream
-                .filter(cookie -> cookie.getName().equals(GTM4JAHIA_USER_COOKIE_NAME))
-                .collect(Collectors.toList());
+        List<Cookie> cookieNextPreviewList = new ArrayList<>();
+        Cookie[] cookies = httpServletRequest.getCookies();
+
+        if(cookies != null && cookies.length > 0){
+            cookieNextPreviewList = Arrays.stream(cookies) // convert list to stream
+                    .filter(cookie -> cookie.getName().equals(GTM4JAHIA_USER_COOKIE_NAME))
+                    .collect(Collectors.toList());
+        }
+
         //add cookie
         if (cookieNextPreviewList.isEmpty()){
             if(isJahians(renderContext)){
@@ -176,6 +191,10 @@ public class Gtm4JahiaFilter extends AbstractFilter {
 //        cookie.setMaxAge(365*24*60*60);//1y in sec
 //        return cookie;
 //    }
+    private boolean isGuest(RenderContext renderContext){
+        JahiaUser user = renderContext.getUser();
+        return "guest".equals(user.getName());
+    }
     private boolean isJahians(RenderContext renderContext){
         JahiaUser user = renderContext.getUser();
         String email = user.getProperty("j:email");

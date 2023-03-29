@@ -135,13 +135,31 @@ window.addEventListener('DOMContentLoaded', (event) => {
         });
 
         //login
+        // if(events?.userLogged){
+        //     const storageKey = "gtm4UserLogged";
+        //     const userLogged = localStorage.getItem(storageKey) ? JSON.parse(localStorage.getItem(storageKey)) : null;
+        //     if(userLogged)
+        //         return;
+        //
+        //     localStorage.setItem(storageKey, JSON.stringify(true))
+        //     window.dataLayer.push({
+        //         event: 'login',
+        //         login_origin: window.location.host
+        //     });
+        // }
         document.addEventListener("submit", event => {
             // event.preventDefault();
-            const form = event.target;
-            if (form.getAttribute("name") === "loginForm") {
-                window.dataLayer.push({
-                    event: 'login',
-                });
+            const storageKey = "gtm4UserLogged";
+            const userLogged = sessionStorage.getItem(storageKey) ? JSON.parse(localStorage.getItem(storageKey)) : null;
+            if(!userLogged){
+                const form = event.target;
+                if (form.getAttribute("name") === "loginForm") {
+                    window.dataLayer.push({
+                        event: 'login',
+                        login_origin: window.location.host
+                    });
+                    sessionStorage.setItem(storageKey, JSON.stringify(true))
+                }
             }
             return true;
         })
