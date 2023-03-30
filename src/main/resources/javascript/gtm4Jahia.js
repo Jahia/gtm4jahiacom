@@ -26,6 +26,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             const match = regex.exec(node.classList.value);
             return match?.groups?.type || deft;
         }
+        const getMktFormId = ({form}) => {
+            const regex = new RegExp('mktoForm_(?<formId>[\\w_.-]+)');
+            const match = regex.exec(form.id);
+            return match?.groups?.formId || null;
+        }
 
         const isInViewport = (el) => {
             const rect = el.getBoundingClientRect();
@@ -83,18 +88,33 @@ window.addEventListener('DOMContentLoaded', (event) => {
             const node = form.closest(`.${keys.form}`) || form.querySelector(`.${keys.form}`);
             if (node && !forms_tracked.includes(node)) {
                 forms_tracked.push(node);
+
                 form.addEventListener("submit", event => {
-                    // event.preventDefault();
-                    window.dataLayer.push({
+                    const getData = () => ({
                         event: 'generate_lead',
                         form_type: getType({node,key:keys.form,deft:'default'}),
                         form_origin: window.location.href,
                         country: form.querySelector('select[name="Country"]')?.value || null,
-                        you_are: form.querySelector('input[name="Lead_Type__c"]')?.value || null,
-                        company_size: form.querySelector('input[name="Employees_Range__c"]')?.value || null,
-                        job_title: form.querySelector('input[name="Title"]')?.value || null
-                    });
-                    // return true;
+                        you_are: form.querySelector('input[name="Lead_Type__c"]:checked')?.value || null,
+                        company_size: form.querySelector('select[name="Employees_Range__c"]')?.value || null,
+                        job_title: form.querySelector('input[name="Title"]')?.value || null,
+                        email: form.querySelector('input[name="Email"]')?.value || null,
+                        phone: form.querySelector('input[name="Phone"]')?.value || null,
+                        firstname: form.querySelector('input[name="FirstName"]')?.value || null,
+                        lastname: form.querySelector('input[name="LastName"]')?.value || null
+                    })
+
+                    const marketoForm = window.MktoForms2?.getForm(getMktFormId({form}));
+                    if(marketoForm){
+                        // console.log("handle marketo form");
+                        marketoForm.onSuccess((values,targetPageUrl) =>{
+                            window.dataLayer.push(getData());
+                            // alert("cheri ca va couper !");
+                        })
+                    }else{
+                        // console.log("handle form");
+                        window.dataLayer.push(getData());
+                    }
                 })
             }
         })
