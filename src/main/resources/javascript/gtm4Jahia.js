@@ -11,21 +11,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
             social:"social_network"
         }
 
-        // const getTypeBundle = (key) => [
-        //     {name:`main_${key}_demo`, value:'demo'},
-        //     {name:`main_${key}_free_trial`, value:'free_trial'},
-        //     {name:`main_${key}_contact`, value:'contact'},
-        //     {name:`main_${key}_ressource`, value:'ressource'},
-        //     {name:`main_${key}_upgrade`, value:'upgrade'},
-        //     {name:`main_${key}_webinar`, value:'webinar'}
-        // ]
-        // const getType = ({node,key}) => getTypeBundle(key).find(({name}) => node.classList.contains(name))?.value || 'default';
-
         const getType = ({node,key,deft}) => {
             const regex = new RegExp(`${key}_(?<type>[\\w_]+)`);
             const match = regex.exec(node.classList.value);
             return match?.groups?.type || deft;
         }
+
         const getMktFormId = ({form}) => {
             const regex = new RegExp('mktoForm_(?<formId>[\\w_.-]+)');
             const match = regex.exec(form.id);
@@ -119,26 +110,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         })
 
-        // document.addEventListener("submit", event => {
-        //     // event.preventDefault();
-        //     const form = event.target;
-        //     const node = form.closest(`.${keys.form}`) || form.querySelector(`.${keys.form}`);
-        //     if (node) {
-        //         window.dataLayer.push({
-        //             event: 'generate_lead',
-        //             form_type: getType({node,key:keys.form,deft:'default'}),
-        //             form_origin: window.location.href,
-        //             country: form.querySelector('select[name="Country"]')?.value || null,
-        //             you_are: form.querySelector('input[name="Lead_Type__c"]')?.value || null,
-        //             company_size: form.querySelector('input[name="Employees_Range__c"]')?.value || null,
-        //             job_title: form.querySelector('input[name="Title"]')?.value || null
-        //         });
-        //         //TODO remove after test
-        //         alert("continue ?");
-        //     }
-        //     // return true;
-        // })
-
         //click_social_network
         document.querySelectorAll('a, button').forEach(element => {
             const node = element.closest(`.${keys.social}`) || element.querySelector(`.${keys.social}`);
@@ -155,18 +126,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         });
 
         //login
-        // if(events?.userLogged){
-        //     const storageKey = "gtm4UserLogged";
-        //     const userLogged = localStorage.getItem(storageKey) ? JSON.parse(localStorage.getItem(storageKey)) : null;
-        //     if(userLogged)
-        //         return;
-        //
-        //     localStorage.setItem(storageKey, JSON.stringify(true))
-        //     window.dataLayer.push({
-        //         event: 'login',
-        //         login_origin: window.location.host
-        //     });
-        // }
         document.addEventListener("submit", event => {
             // event.preventDefault();
             const storageKey = "gtm4UserLogged";
@@ -185,44 +144,4 @@ window.addEventListener('DOMContentLoaded', (event) => {
         })
 
     })(window.gtm4)
-
-
-
-
-    //Event click_main_cta OLD versions
-
-    // document.querySelectorAll('a.main_cta, button.main_cta, .main_cta a, .main_cta button, span.main_cta').forEach(element => {
-    //     const cta = element.closest('.main_cta');
-    //     if(!gtm4_tracked_ctas.includes(cta)){
-    //         gtm4_tracked_ctas.push(cta);
-    //         element.addEventListener("click", event => {
-    //             if (cta) {
-    //                 window.dataLayer.push({
-    //                     event: 'click_main_cta',
-    //                     cta_type: window.gtm4.cta_types.find(({name}) => cta.classList.contains(name))?.value || 'default',
-    //                     cta_origin: window.location.href,
-    //                     cta_label: cta.innerText.trim()
-    //                 });
-    //             }
-    //         })
-    //     }
-    // });
-
-    // document.addEventListener("click", event => {
-    //     const target = event.target;
-    //     const isCtaNode = target.nodeName === 'BUTTON' || target.nodeName === 'A' || target.childElementCount === 0;
-    //     if(isCtaNode){
-    //         const cta = target.closest('.main_cta');
-    //         if (cta) {
-    //             window.dataLayer.push({
-    //                 event: 'click_main_cta',
-    //                 cta_type: window.gtm4.cta_types.find(({name}) => cta.classList.contains(name))?.value || 'default',
-    //                 cta_origin: window.location.href,
-    //                 cta_label: cta.innerText.trim()
-    //             });
-    //         }
-    //     }
-    // });
-
-
 })
