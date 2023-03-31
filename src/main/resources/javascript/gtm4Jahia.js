@@ -100,7 +100,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         // console.log("handle marketo form");
                         marketoForm.onSuccess((values,targetPageUrl) =>{
                             window.dataLayer.push(getData());
-                            // alert("cheri ca va couper !");
                         })
                     }else{
                         // console.log("handle form");
