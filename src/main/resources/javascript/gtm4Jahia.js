@@ -23,6 +23,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             return match?.groups?.formId || null;
         }
 
+        const isMktForm = ({form}) => form.id.includes('mktoForm_')
+
         const isInViewport = (el) => {
             const rect = el.getBoundingClientRect();
             return (
@@ -76,8 +78,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         //Event generate_lead
         Array.from(document.getElementsByTagName('form')).forEach(form =>{
-            const node = form.closest(`.${keys.form}`) || form.querySelector(`.${keys.form}`);
-            if (node && !forms_tracked.includes(node)) {
+            let node = form.closest(`.${keys.form}`) || form.querySelector(`.${keys.form}`);
+            if(!node && isMktForm({form})) //auto select marketo form
+                node = form;
+
+            if ( node && !forms_tracked.includes(node) ) {
                 forms_tracked.push(node);
 
                 form.addEventListener("submit", event => {
@@ -97,12 +102,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     const marketoForm = window.MktoForms2?.getForm(getMktFormId({form}));
                     if(marketoForm){
-                        // console.log("handle marketo form");
                         marketoForm.onSuccess((values,targetPageUrl) =>{
                             window.dataLayer.push(getData());
                         })
                     }else{
-                        // console.log("handle form");
                         window.dataLayer.push(getData());
                     }
                 })
