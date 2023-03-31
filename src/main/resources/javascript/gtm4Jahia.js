@@ -86,6 +86,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 forms_tracked.push(node);
 
                 form.addEventListener("submit", event => {
+                    const formHasAlreadyBeenSubmitted =  form.getAttribute("data-form-submitted")?true:false;
                     const getData = () => ({
                         event: 'generate_lead',
                         form_type: getType({node,key:keys.form,deft:'default'}),
@@ -102,12 +103,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
                     const marketoForm = window.MktoForms2?.getForm(getMktFormId({form}));
                     if(marketoForm){
-                        marketoForm.onSuccess((values,targetPageUrl) =>{
-                            window.dataLayer.push(getData());
-                        })
+                        if(!formHasAlreadyBeenSubmitted)
+                            marketoForm.onSuccess((values,targetPageUrl) =>{
+                                window.dataLayer.push(getData());
+                            })
                     }else{
                         window.dataLayer.push(getData());
                     }
+                    if(!formHasAlreadyBeenSubmitted)
+                        form.setAttribute("data-form-submitted", "true");
                 })
             }
         })
