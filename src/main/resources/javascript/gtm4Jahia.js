@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+window.addEventListener('load', (event) => {
     window.dataLayer = window.dataLayer || [];
 
     ((events)=>{
