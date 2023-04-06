@@ -9,14 +9,14 @@
     <groupId>org.jahia.se.modules</groupId>
     <artifactId>gtm4jahia</artifactId>
     <name>GTM 4 jahia.com</name>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>bundle</packaging>
     <description>This is the custom module (GTM 4 jahia.com) for running on a Jahia server.</description>
 
     <scm>
         <connection>scm:git:git@github.com:Jahia/gtm4jahiacom.git</connection>
         <developerConnection>scm:git:git@github.com:Jahia/gtm4jahiacom.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>gtm4jahia-1.0.3</tag>
   </scm>
 
     <repositories>
