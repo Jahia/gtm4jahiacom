@@ -2,6 +2,7 @@ package org.jahia.se.modules.gtm4jahia;
 
 import net.htmlparser.jericho.*;
 import org.apache.commons.lang.StringUtils;
+import org.jahia.osgi.BundleUtils;
 import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRPropertyWrapper;
@@ -12,6 +13,8 @@ import org.jahia.services.render.filter.AbstractFilter;
 import org.jahia.services.render.filter.RenderChain;
 import org.jahia.services.render.filter.RenderFilter;
 import org.jahia.services.usermanager.JahiaUser;
+import org.jahia.utils.FileUtils;
+import org.jahia.utils.WebUtils;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -21,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -98,7 +103,7 @@ public class Gtm4JahiaFilter extends AbstractFilter {
         return output;
     }
 
-    private String getHeadScript(RenderContext renderContext) throws RepositoryException {
+    private String getHeadScript(RenderContext renderContext) throws RepositoryException, IOException {
         List<String> pageCategories = getPageCategories(renderContext);
         StringBuilder headScriptBuilder =
                 new StringBuilder("\n<script type=\"application/javascript\">window.gtm4 = window.gtm4 || {};");
@@ -118,7 +123,10 @@ public class Gtm4JahiaFilter extends AbstractFilter {
 
         headScriptBuilder.append( "\n</script>");
 
-        headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/gtm4Jahia.js\"></script>\n<" );
+        InputStream resourceAsStream = WebUtils.getResourceAsStream("/modules/gtm4jahia/javascript/gtm4Jahia.js");
+        String checksum = resourceAsStream != null ? FileUtils.calculateDigest(resourceAsStream) : "0";
+
+        headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/gtm4Jahia.js?version="+checksum+"\"></script>\n<" );
         return headScriptBuilder.toString();
     }
 
