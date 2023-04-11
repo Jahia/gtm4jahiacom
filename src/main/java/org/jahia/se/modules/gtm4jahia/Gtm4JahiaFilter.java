@@ -35,6 +35,9 @@ import java.util.stream.Collectors;
 public class Gtm4JahiaFilter extends AbstractFilter {
     private static Logger logger = LoggerFactory.getLogger(Gtm4JahiaFilter.class);
     private final static String GTM4JAHIA_MODULE="gtm4jahia";
+//    private final static String GTM4JAHIA_SCRIPTNAME="gtm4JahiaScript.min.js";
+    private final static String GTM4JAHIA_SCRIPTNAME="gtm4Jahia.js";
+    private final static String GTM4JAHIA_MKTSCRIPTNAME="trackingScriptUTM.js";
     private final static String GTM4JAHIA_USER_COOKIE_NAME = "internal_jahian_user";
     private final static String GTM4JAHIA_USER_COOKIE_VISITOR_VALUE = "0";
     private final static String GTM4JAHIA_USER_COOKIE_JAHIANS_VALUE = "1";
@@ -123,10 +126,16 @@ public class Gtm4JahiaFilter extends AbstractFilter {
 
         headScriptBuilder.append( "\n</script>");
 
-        InputStream resourceAsStream = WebUtils.getResourceAsStream("/modules/gtm4jahia/javascript/gtm4Jahia.js");
+        InputStream resourceAsStream = WebUtils.getResourceAsStream("/modules/gtm4jahia/javascript/"+GTM4JAHIA_SCRIPTNAME);
         String checksum = resourceAsStream != null ? FileUtils.calculateDigest(resourceAsStream) : "0";
+        headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/"+GTM4JAHIA_SCRIPTNAME+"?version="+checksum+"\"></script>\n" );
 
-        headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/gtm4Jahia.js?version="+checksum+"\"></script>\n<" );
+        resourceAsStream = WebUtils.getResourceAsStream("/modules/gtm4jahia/javascript/"+GTM4JAHIA_MKTSCRIPTNAME);
+        checksum = resourceAsStream != null ? FileUtils.calculateDigest(resourceAsStream) : "0";
+        headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/"+GTM4JAHIA_MKTSCRIPTNAME+"?version="+checksum+"\"></script>\n" );
+
+        headScriptBuilder.append( "<" );
+
         return headScriptBuilder.toString();
     }
 
