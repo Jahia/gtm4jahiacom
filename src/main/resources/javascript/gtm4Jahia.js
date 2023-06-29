@@ -35,6 +35,29 @@ window.addEventListener('load', (event) => {
             );
         };
 
+        const conversionValueMatrix = [
+            {
+                value:0,
+                test:["test","yopmail","qq"]
+            },
+            {
+                value:25,
+                test:["gmail","yahoo","hotmail","live","aol","outlook","orange","laposte","icloud"]
+            }
+        ]
+        const getConversionValue = (email) => {
+            if(!email)
+                return 0;
+
+            const domain = email.split('@')[1].split('.').slice(-2,-1);
+            const conversionValue = conversionValueMatrix.reduce((currentValue,{value: testValue,test})=>{
+                if(test.includes(domain))
+                    return testValue;
+                return currentValue
+            },500);
+            return conversionValue;
+        }
+
         //Event info
         if(events?.pageInfo)
             window.dataLayer.push(events.pageInfo);
@@ -98,7 +121,8 @@ window.addEventListener('load', (event) => {
                         email: form.querySelector('input[name="Email"]')?.value || null,
                         phone: form.querySelector('input[name="Phone"]')?.value || null,
                         firstname: form.querySelector('input[name="FirstName"]')?.value || null,
-                        lastname: form.querySelector('input[name="LastName"]')?.value || null
+                        lastname: form.querySelector('input[name="LastName"]')?.value || null,
+                        conversion_value: getConversionValue(form.querySelector('input[name="Email"]')?.value || null)
                     })
 
                     const marketoForm = window.MktoForms2?.getForm(getMktFormId({form}));

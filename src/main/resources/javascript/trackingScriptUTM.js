@@ -63,9 +63,11 @@ window.addEventListener('load', (event) => {
 
             // Si aucun paramètre UTM n'est présent et que le trafic provient de Google, on ajoute "google" comme valeur de utm_source
             if (param_value == null || param_value == "" || param_value == "undefined") {
-                if (param_url_name == "utm_source" && isTrafficFromGoogleSearch()) {
-                    param_value = "google";
-                    setCookie('ppcMedium', 'organic', 365);
+                if (param_url_name == "utm_source") {
+                    const organic = ["google","bing"];
+                    param_value = document.referrer.split('/')[2].split('.').slice(-2,-1);
+                    const ppcMedium = organic.includes(param_value)?'organic':'referral';
+                    setCookie('ppcMedium',ppcMedium, 365);
                     setCookie('ppcCampaign', '', 365);
                     setCookie('ppcAdGroup', '', 365);
                     setCookie('ppcKeyword', '', 365);
