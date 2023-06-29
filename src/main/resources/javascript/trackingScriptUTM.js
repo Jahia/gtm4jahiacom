@@ -65,7 +65,7 @@ window.addEventListener('load', (event) => {
             if (param_value == null || param_value == "" || param_value == "undefined") {
                 if (param_url_name == "utm_source" && document.referrer) {
                     const organic = ["google","bing"];
-                    param_value = document.referrer.split('/')[2]?.split('.')?.slice(-2,-1);
+                    param_value = document.referrer.split('/')[2]?.split('.')?.slice(-2,-1)?.toString();
                     if(param_value && param_value != ""){
                         const ppcMedium = organic.includes(param_value)?'organic':'referral';
                         setCookie('ppcMedium',ppcMedium, 365);

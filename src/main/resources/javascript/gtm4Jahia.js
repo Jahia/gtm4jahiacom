@@ -49,7 +49,7 @@ window.addEventListener('load', (event) => {
             if(!email)
                 return 0;
 
-            const domain = email.split('@')[1].split('.').slice(-2,-1);
+            const domain = email.split('@')[1].split('.').slice(-2,-1)?.toString();
             const conversionValue = conversionValueMatrix.reduce((currentValue,{value: testValue,test})=>{
                 if(test.includes(domain))
                     return testValue;
