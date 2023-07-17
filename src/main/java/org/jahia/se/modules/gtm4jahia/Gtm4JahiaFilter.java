@@ -99,7 +99,7 @@ public class Gtm4JahiaFilter extends AbstractFilter {
         List<Element> elementList = source.getAllElements(HTMLElementName.HEAD);
         if (elementList != null && !elementList.isEmpty()) {
             final StartTag headStartTag = elementList.get(0).getStartTag();
-            outputDocument.replace(headStartTag.getEnd(), headStartTag.getEnd() + 1, getHeadScript(renderContext));
+            outputDocument.insert(headStartTag.getEnd(),getHeadScript(renderContext));
         }
 
         output = outputDocument.toString().trim();
@@ -128,13 +128,11 @@ public class Gtm4JahiaFilter extends AbstractFilter {
 
         InputStream resourceAsStream = WebUtils.getResourceAsStream("/modules/gtm4jahia/javascript/"+GTM4JAHIA_SCRIPTNAME);
         String checksum = resourceAsStream != null ? FileUtils.calculateDigest(resourceAsStream) : "0";
-        headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/"+GTM4JAHIA_SCRIPTNAME+"?version="+checksum+"\"></script>\n" );
+        headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/"+GTM4JAHIA_SCRIPTNAME+"?version="+checksum+"\"></script>" );
 
         resourceAsStream = WebUtils.getResourceAsStream("/modules/gtm4jahia/javascript/"+GTM4JAHIA_MKTSCRIPTNAME);
         checksum = resourceAsStream != null ? FileUtils.calculateDigest(resourceAsStream) : "0";
         headScriptBuilder.append( "\n<script async type=\"text/javascript\" src=\"/modules/gtm4jahia/javascript/"+GTM4JAHIA_MKTSCRIPTNAME+"?version="+checksum+"\"></script>\n" );
-
-        headScriptBuilder.append( "<" );
 
         return headScriptBuilder.toString();
     }
