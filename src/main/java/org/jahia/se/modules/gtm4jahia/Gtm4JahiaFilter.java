@@ -47,7 +47,7 @@ public class Gtm4JahiaFilter extends AbstractFilter {
 
     @Activate
     public void activate() {
-        setPriority(-1);
+        setPriority(0);// -1 and addStuff create a "conflict" <
         setApplyOnModes("live");//,preview
         setApplyOnConfigurations("page");
         setApplyOnTemplateTypes("html");
