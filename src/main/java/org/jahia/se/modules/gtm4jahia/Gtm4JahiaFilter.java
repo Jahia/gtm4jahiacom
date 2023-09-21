@@ -7,6 +7,7 @@ import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRPropertyWrapper;
 import org.jahia.services.content.JCRValueWrapper;
+import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.render.RenderContext;
 import org.jahia.services.render.Resource;
 import org.jahia.services.render.filter.AbstractFilter;
@@ -139,6 +140,7 @@ public class Gtm4JahiaFilter extends AbstractFilter {
 
     private List<String> getPageCategories(RenderContext renderContext) throws RepositoryException {
         List<String> pageCategories = new ArrayList<String>();
+        String siteName = renderContext.getSite().getName();
         JCRNodeWrapper mainResourceNode = renderContext.getMainResource().getNode();
         JCRNodeWrapper pageNode;
 
@@ -152,8 +154,9 @@ public class Gtm4JahiaFilter extends AbstractFilter {
             pageCategories.add(
                 pageNode.hasProperty(PAGE_CATEGORY_1_PROPS) ?
                     pageNode.getProperty(PAGE_CATEGORY_1_PROPS).getValue().getNode().getProperty("jcr:title").getValue().toString()
-                    : "n/a"
+                    : siteName
             );
+
             pageCategories.add(pageNode.getProperty(PAGE_CATEGORY_2_PROPS).getValue().toString());
             pageCategories.add(pageNode.getIdentifier());
             pageCategories.add(pageNode.getPath());
