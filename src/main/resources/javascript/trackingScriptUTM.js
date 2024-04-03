@@ -137,16 +137,28 @@ window.addEventListener('load', (event) => {
         return false;
     }
 
+    function getCookiesStartingWith(prefix) {
+        const regex = new RegExp(`(^|;\\s*)(${prefix}[^=]+)=([^;]+)`, 'g');
+        const cookies = {};
+        document.cookie.replace(regex, (match, p1, p2, p3) => {
+            cookies[p2] = p3;
+            return match; // Cette valeur de retour n'est pas utilisée ici, mais est nécessaire pour la fonction replace
+        });
+        return cookies;
+    }
+
+
     //function to setup parameters and begin cookie value insertion into marketo form
     function ppcUrlCookiePart2() {
         //setup list/array of parameters desired. names on right should match hidden form field names
         var param_names = new Array(
-            'ppcSource;utm_source__c',
-            'ppcMedium;utm_medium__c',
-            'ppcCampaign;utm_campaign__c',
-            'ppcAdGroup;utm_adgroup__c',
-            'ppcKeyword;utm_term__c',
-            'ppcContent;utm_content__c'
+            'ppcSource;utm_source',
+            'ppcMedium;utm_medium',
+            'ppcCampaign;utm_campaign',
+            'ppcAdGroup;utm_adgroup',
+            'ppcKeyword;utm_term',
+            'ppcContent;utm_content',
+            '_ga;ga_client_id'
         );
 
         //loop through all params and create cookie
@@ -157,6 +169,18 @@ window.addEventListener('load', (event) => {
             //start the cookie creation
             mCheckCookie(param_name, param_field_name);
         }
+
+        //
+        const gaCookies = getCookiesStartingWith('_ga_');
+        const firstGaCookieValue = Object.values(gaCookies)[0];
+        try {
+            var obj1 = document.getElementsByName("ga_session_id");
+            obj1[0].value = firstGaCookieValue;
+            return true;
+        } catch (err) {
+            return false;
+        }
+
     }
 
     //ppcUrlCookiePart1 will grab values from the querystring and save them in cookies

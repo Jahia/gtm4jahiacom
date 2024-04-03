@@ -114,15 +114,14 @@ window.addEventListener('load', (event) => {
                         event: 'generate_lead',
                         form_type: getType({node,key:keys.form,deft:'default'}),
                         form_origin: window.location.href,
-                        country: form.querySelector('select[name="Country"]')?.value || null,
-                        you_are: form.querySelector('input[name="Lead_Type__c"]:checked')?.value || null,
-                        company_size: form.querySelector('select[name="Employees_Range__c"]')?.value || null,
-                        job_title: form.querySelector('input[name="Title"]')?.value || null,
-                        email: form.querySelector('input[name="Email"]')?.value || null,
-                        phone: form.querySelector('input[name="Phone"]')?.value || null,
-                        firstname: form.querySelector('input[name="FirstName"]')?.value || null,
-                        lastname: form.querySelector('input[name="LastName"]')?.value || null,
-                        conversion_value: getConversionValue(form.querySelector('input[name="Email"]')?.value || null)
+                        country: form.querySelector('select[name="country__list_"]')?.value || null,
+                        company_size: form.querySelector('select[name="numemployees"]')?.value || null,
+                        job_title: form.querySelector('input[name="jobtitle"]')?.value || null,
+                        email: form.querySelector('input[name="email"]')?.value || null,
+                        phone: form.querySelector('input[name="phone"]')?.value || null,
+                        firstname: form.querySelector('input[name="firstname"]')?.value || null,
+                        lastname: form.querySelector('input[name="lastname"]')?.value || null,
+                        conversion_value: getConversionValue(form.querySelector('input[name="email"]')?.value || null)
                     })
 
                     const marketoForm = window.MktoForms2?.getForm(getMktFormId({form}));
